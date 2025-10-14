@@ -5,35 +5,46 @@ import next from "next";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-    try {
-        const { email, password } = await request.json()
-        
-        if (!email || !password) {
-            return NextResponse.json(
-                { error: "Invalid email or password" },
-                { status: 400 }
-            )
-        }
+  try {
+    const { email, password } = await request.json();
 
-        await connectToDatabase();
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return NextResponse.json(
-                { error: "User already exists" },
-                { status: 400 }
-            )
-        }
-        await User.create({ email, password });
-        return NextResponse.json(
-            { message: "User Registration Successful" },
-            { status: 201 }
-        )
-    } catch (error) {
-        console.log("Error From registration api", error);
-        
-        return NextResponse.json(
-            { error: "User Registration Failed" },
-            { status: 400 }
-        )  
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 400 }
+      );
     }
+
+    /**
+     * it will check existing user
+     * if there have any existing user it return a error
+     * */
+
+    await connectToDatabase();
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "User already exists" },
+        { status: 400 }
+      );
+    }
+
+    /**
+     * if there have not any user
+     * then it will create a user
+     * */
+
+    await User.create({ email, password });
+    return NextResponse.json(
+      { message: "User Registration Successful" },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.log("Error From registration api", error);
+
+    return NextResponse.json(
+      { error: "User Registration Failed" },
+      { status: 400 }
+    );
+  }
 }
