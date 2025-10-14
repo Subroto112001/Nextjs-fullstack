@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         height: 1920,
         width: 1080,
         quality: body.transformation?.quality ?? 100,
-      },
+      }, 
     };
 
     const newVideo = await Video.create(videoddata);
