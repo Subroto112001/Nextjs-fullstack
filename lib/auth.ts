@@ -39,7 +39,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
           };
         } catch (error) {
-          console.log("Error From Auth", error);
+          console.error("Error From Auth", error);
           throw error;
         }
       },
@@ -53,7 +53,7 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, user, token }) {
+    async session({ session,  token }) {
       if (session.user) {
         session.user.id = token.id as string;
       }
